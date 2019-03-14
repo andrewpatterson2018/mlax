@@ -4,12 +4,12 @@ import keras
 import tensorflow as tf
 from time import time
 from keras.callbacks import TensorBoard
+from keras.optimizers import adam
 from keras.utils import to_categorical
 
 
 # FashionMINST convolutional neural network, classify images of clothing into one of 10 classes.
 def feed_network(learning_rate, epochs, batches):
-
     fashion_mnist = keras.datasets.fashion_mnist
 
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -38,7 +38,7 @@ def feed_network(learning_rate, epochs, batches):
 
     print('Test accuracy:', test_acc)
 
-def conv_network(_epochs):
+def conv_network(_learning_rate, _epochs, _batches):
     fashion_mnist = keras.datasets.fashion_mnist
 
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -60,17 +60,17 @@ def conv_network(_epochs):
     model.add(keras.layers.Flatten())
     model.add(keras.layers.Dense(10, activation=tf.nn.softmax))
 
-    model.compile(optimizer='adam', 
+    model_optimizer = adam(lr=_learning_rate)
+    model.compile(optimizer=model_optimizer,
                   loss = 'categorical_crossentropy',
                   metrics=['accuracy'])
 
 
     # Create a TensorBoard instance with the path to the logs directory
     tensorboard = TensorBoard(log_dir='logs/{}'.format(time()))
-    
     model.fit(train_images, train_labels, 
               validation_data=(test_images, test_labels), 
-              epochs=5, callbacks=[tensorboard])
+              epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
 
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
@@ -85,7 +85,7 @@ def main(combination, learning_rate, epochs, batches, seed):
     if int(combination)==1:
         feed_network(learning_rate, epochs, batches)
     if int(combination)==2:
-        conv_network(epochs)
+        conv_network(learning_rate, epochs, batches)
 
     print("Done!")
 
@@ -116,4 +116,4 @@ if __name__ == "__main__":
     batches = check_param_is_numeric("batches", args.batches)
     seed = check_param_is_numeric("seed", args.seed)
 
-    main(combination, learning_rate, epochs, batches, seed)git
+    main(combination, learning_rate, epochs, batches, seed)
