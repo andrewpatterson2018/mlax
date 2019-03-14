@@ -8,7 +8,7 @@ from keras.callbacks import TensorBoard
 
 
 # FashionMINST convolutional neural network, classify images of clothing into one of 10 classes.
-def network_one(learning_rate, epochs, batches):
+def feed_forward_network(learning_rate, epochs, batches):
 
     fashion_mnist = keras.datasets.fashion_mnist
 
@@ -44,7 +44,7 @@ def main(combination, learning_rate, epochs, batches, seed):
     print("Seed: {}".format(seed))
 
     if int(combination)==1:
-        network_one(learning_rate, epochs, batches)
+        feed_forward_network(learning_rate, epochs, batches)
     if int(combination)==2:
         "fill me"
 
@@ -77,4 +77,4 @@ if __name__ == "__main__":
     batches = check_param_is_numeric("batches", args.batches)
     seed = check_param_is_numeric("seed", args.seed)
 
-    main(combination, learning_rate, epochs, batches, seed)
+    main(combination, learning_rate, epochs, batches, seed)git
