@@ -4,8 +4,10 @@ import keras
 import tensorflow as tf
 from time import time
 from keras.callbacks import TensorBoard
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization
 from keras.optimizers import SGD, Adam
 from keras.utils import to_categorical
+import keras.backend as K
 
 #retrives the data, normalises it, and encodes the labels for the softmax outputs.
 def preprocessData():
@@ -27,12 +29,13 @@ def preprocessData():
     return train_images, test_images, train_labels, test_labels
 
 # FashionMINST convolutional neural network, classify images of clothing into one of 10 classes.
-def feed_network(_learning_rate):
+def cone(_learning_rate):
  
     model = keras.Sequential()
-    model.add(keras.layers.Flatten(input_shape=(28,28,1)))
-    model.add(keras.layers.Dense(128, activation='relu'))
-    model.add(keras.layers.Dense(10, activation=tf.nn.softmax, name="output-layer"))
+    model.name = 1
+    model.add(Flatten(input_shape=(28,28,1)))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(10, activation="softmax", name="output-layer"))
 
     model_optimizer = SGD(lr=_learning_rate)
     model.compile(optimizer=model_optimizer, loss = 'categorical_crossentropy', metrics=['accuracy'])
@@ -41,27 +44,27 @@ def feed_network(_learning_rate):
 
     return model
 
-#loss: 0.0385 - acc: 0.9857 - val_loss: 0.4196 - val_acc: 0.9101
-def conv_network(_learning_rate):
-    
+def ctwo(_learning_rate):
+    #loss: 0.0385 - acc: 0.9857 - val_loss: 0.4196 - val_acc: 0.9101
     #Thought process: the convolutional/pooling processes examine small details and pass on the most prominent, which are further abstracted.
 
     model = keras.Sequential()
+    model.name = 2
     #The feature detection layers.
-    model.add(keras.layers.Conv2D(32, kernel_size=(5, 5), activation='relu', input_shape=(28,28,1)))
-    model.add(keras.layers.MaxPooling2D(pool_size=(2, 2), padding='same'))    
+    model.add(Conv2D(32, kernel_size=(5, 5), activation='relu', input_shape=(28,28,1)))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))    
     
-    model.add(keras.layers.Conv2D(64, kernel_size=(5, 5), activation='relu'))
-    model.add(keras.layers.MaxPooling2D(pool_size=(2, 2), padding='same'))    
+    model.add(Conv2D(64, kernel_size=(5, 5), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))    
 
     
-    model.add(keras.layers.Flatten())
+    model.add(Flatten())
 
     #The fully-connected layers, or where the thinking goes on.
-    model.add(keras.layers.Dense(1024, activation='relu'))
-    model.add(keras.layers.Dense(512, activation='relu'))
-    model.add(keras.layers.Dense(256, activation='relu'))
-    model.add(keras.layers.Dense(10, activation=tf.nn.softmax, name="output-layer"))
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dense(10, activation="softmax", name="output-layer"))
 
     model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
 
@@ -71,10 +74,63 @@ def conv_network(_learning_rate):
 
     return model
 
-def evaluate(model, _epochs, _batches, train_images, train_labels, test_images, test_labels):
-    # Create a TensorBoard instance with the path to the logs directory
-    tensorboard = TensorBoard(log_dir='logs/{}'.format(time()), histogram_freq=2, write_grads=True)
+def cthree(_learning_rate):
+    #This attempt is to use a single convolutional layer with pooling to aggregate portions of the image together
+    #Start with only two small layers with very small LRF so that it only picks out miniscule features
+    model = keras.Sequential()
+    model.name = 3
+    #The feature detection layers.
+    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))    
+    
+    model.add(Flatten())
 
+    #The fully-connected layers, or where the thinking goes on.
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(10, activation=tf.nn.softmax, name="output-layer"))
+
+    model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
+
+    model.compile(optimizer=model_optimizer, loss = 'categorical_crossentropy', metrics=['accuracy'])
+   
+    model.summary()
+
+    return model
+
+def cfour(_learning_rate):
+    #This attempt is to use layers of convolutional and pooling layers so that later layers act as a high-level feature detector.
+    model = keras.Sequential()
+    model.name = 4
+    #The feature detection layers.
+    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))    
+    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))  
+    model.add(Flatten())
+
+    #The fully-connected layers, or where the thinking goes on.
+    model.add(BatchNormalization())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(10, activation=tf.nn.softmax, name="output-layer"))
+
+    model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
+
+    
+    model.compile(optimizer=model_optimizer, loss = 'categorical_crossentropy', metrics=['accuracy'])
+   
+    model.summary()
+
+    return model
+
+def evaluate(model, _epochs, _batches, train_images, seed, train_labels, test_images, test_labels):
+    # Create a TensorBoard instance with the path to the logs directory
+    lr = round(keras.backend.eval(model.optimizer.lr), 5)
+
+    print(lr)
+    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(model.name, lr, int(epochs), int(batches), int(seed))
+
+    tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
+    
     model.fit(train_images, train_labels, 
               validation_data=(test_images, test_labels), 
               epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
@@ -94,15 +150,19 @@ def main(combination, learning_rate, epochs, batches, seed):
 
     model = None
     if int(combination)==1:
-        model = feed_network(learning_rate)
+        model = cone(learning_rate)
     if int(combination)==2:
-        model = conv_network(learning_rate)
-    
+        model = ctwo(learning_rate)
+    if int(combination)==3:
+        model = cthree(learning_rate)
+    if int(combination)==4:
+        model = cfour(learning_rate)
     #evaluate the model
     if model == None:
         print("No model created")
         return
-    evaluate(model, epochs, batches, train_images, train_labels, test_images, test_labels)
+    evaluate(model, epochs, batches, train_images, learning_rate, train_labels, test_images, test_labels)
+    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), learning_rate, int(epochs), int(batches), int(seed)))
 
 def check_param_is_numeric(param, value):
 
