@@ -3,9 +3,10 @@ import time
 import keras
 import tensorflow as tf
 from time import time
+from keras.losses import categorical_crossentropy
 from keras.callbacks import TensorBoard
-from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization
-from keras.optimizers import SGD, Adam, Adagrad
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Dropout
+from keras.optimizers import SGD, Adam, Adadelta
 from keras.utils import to_categorical
 import keras.backend as K
 
@@ -136,36 +137,30 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     model = keras.Sequential()
     #The feature detection layers.
     # input structure (28,28,1)
-    model.add(Conv2D(16, kernel_size=(4, 4), activation='relu', input_shape=(28,28,1)))
-    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))     
-    model.add(Conv2D(32, kernel_size=(4, 4), activation='relu', input_shape=(13,13,16)))
-    
-    model.add(Flatten(input_shape=(10,10,32)))
-    model.add(Dense(256, activation='relu'))
+    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
+    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))   
+    # not 100% sure about this but according to docs minimises chance of overfitting 
+    model.add(Dropout(0.25))
+    model.add(Flatten())
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-
+    model.add(Dropout(0.25))
     model.add(Dense(10, activation="softmax", name="output-layer"))
 
-
-    model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
-    
-    model.compile(optimizer=model_optimizer, loss = 'categorical_crossentropy', metrics=['accuracy'])
-   
-    model.summary()
+    # model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
+    model_optimizer = Adadelta()
+    model.compile(optimizer=model_optimizer, loss =categorical_crossentropy, metrics=['accuracy'])
 
     boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
-
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
-    
-    model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
+    model.summary()
 
+    model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
 
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
-
 
 
 def main(combination, learning_rate, epochs, batches, seed):
