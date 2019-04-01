@@ -5,7 +5,7 @@ import tensorflow as tf
 from time import time
 from keras.callbacks import TensorBoard
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization
-from keras.optimizers import SGD, Adam
+from keras.optimizers import SGD, Adam, Adagrad
 from keras.utils import to_categorical
 import keras.backend as K
 
@@ -104,7 +104,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
 
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
-
+# No convolutional layers
 def cthree(combination, _learning_rate, _epochs, _batches, seed):
     train_images, test_images, train_labels, test_labels = GetData()
 
@@ -135,19 +135,21 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
 
     model = keras.Sequential()
     #The feature detection layers.
-    model.add(Conv2D(16, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
+    # input structure (28,28,1)
+    model.add(Conv2D(16, kernel_size=(4, 4), activation='relu', input_shape=(28,28,1)))
     model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))     
-    model.add(Conv2D(16, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
-    model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))     
+    model.add(Conv2D(32, kernel_size=(4, 4), activation='relu', input_shape=(13,13,16)))
+    
+    model.add(Flatten(input_shape=(10,10,32)))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(64, activation='relu'))
 
-    model.add(Flatten(input_shape=(28,28,1)))
-    model.add(Dense(512, activation='relu'))
-    model.add(Dense(512, activation='relu'))
     model.add(Dense(10, activation="softmax", name="output-layer"))
 
 
     model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
-
+    
     model.compile(optimizer=model_optimizer, loss = 'categorical_crossentropy', metrics=['accuracy'])
    
     model.summary()
@@ -163,7 +165,6 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     print('Test accuracy:', test_acc)
 
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
-
 
 
 
