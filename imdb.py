@@ -19,10 +19,6 @@ def GetData():
     (trainX, trainY), (testX, testY) = imdb.load_data(path='imdb.pkl', num_words = 5000, seed=12345)
     return trainX, testX, trainY, testY
 
-def GetReportOutput(combination, learning_rate, batches, epochs, train_acc, test_acc):
-    final_combination_data = ("IMDB: Combination %d\nLearning Rate: %f, Number of Batches: %d, Number of Epochs: %d \nTraining Accuracy : %f, Test Accuracy : %f" % (combination, learning_rate, batches, epochs, train_acc, test_acc))
-    return(final_combination_data)
-
 def check_param_is_numeric(param, value):
 
     try:
@@ -70,9 +66,6 @@ def cone(combination, _learning_rate, _epochs, _batches, _seed):
     test_loss, test_acc = model.evaluate(testX, testY)
     print('Test accuracy:', test_acc)
 
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
-
     model.save('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(_seed)))
 
 
@@ -99,9 +92,6 @@ def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
     # Final evaluation of the model
     test_loss, test_acc = model.evaluate(testX, testY, verbose=0)
     print('Test accuracy:', test_acc)
-
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
 
     model.save('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(_seed)))
 
@@ -133,9 +123,6 @@ def cthree(combination, _learning_rate, _epochs, _batches, _seed):
     # Final evaluation of the model
     test_loss, test_acc = model.evaluate(testX, testY, verbose=0)
     print('Test accuracy:', test_acc)
-
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
 
     model.save('imdb-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(_seed)))
 
