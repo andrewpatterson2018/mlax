@@ -43,10 +43,6 @@ def GetData():
 
     return train_images, test_images, train_labels, test_labels
 
-def GetReportOutput(combination, learning_rate, batches, epochs, train_acc, test_acc):
-    final_combination_data = ("FASHION MNIST: Combination %d\nLearning Rate: %f, Number of Batches: %d, Number of Epochs: %d \nTraining Accuracy : %f, Test Accuracy : %f" % (combination, learning_rate, batches, epochs, train_acc, test_acc))
-    return(final_combination_data)
-
 def check_param_is_numeric(param, value):
     try:
         value = float(value)
@@ -87,9 +83,6 @@ def cone(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
-
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 
@@ -122,9 +115,6 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
-
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 # No convolutional layers
@@ -151,9 +141,6 @@ def cthree(combination, _learning_rate, _epochs, _batches, seed):
 
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
-
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
 
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
@@ -183,10 +170,6 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     train_loss, train_acc = model.evaluate(train_images, train_labels)
     print('Test accuracy:', test_acc)
 
-    # Print results for Dataset table comparison
-    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
-    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
-    
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 
