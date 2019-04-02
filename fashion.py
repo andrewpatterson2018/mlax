@@ -3,12 +3,13 @@ import time
 import keras
 import tensorflow as tf
 from time import time
-from keras.losses import categorical_crossentropy
+from keras.losses import categorical_crossentropy, sparse_categorical_crossentropy
 from keras.callbacks import TensorBoard
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Dropout
 from keras.optimizers import SGD, Adam, Adadelta
 from keras.utils import to_categorical
 import keras.backend as K
+import numpy
 
 
 #three 'root' architectures:
@@ -34,13 +35,28 @@ def GetData():
     train_images = train_images.reshape(60000,28,28, 1)
     test_images = test_images.reshape(10000,28,28, 1)
 
-    #one-hot encode target column
-    train_labels = to_categorical(train_labels)
-    test_labels = to_categorical(test_labels)
+    print(train_labels[0])
+
+    # one-hot encode target column
+    # train_labels = to_categorical(train_labels)
+    # test_labels = to_categorical(test_labels)
 
     return train_images, test_images, train_labels, test_labels
 
+def GetReportOutput(combination, learning_rate, batches, epochs, train_acc, test_acc):
+    final_combination_data = ("FASHION MNIST: Combination %d\nLearning Rate: %f, Number of Batches: %d, Number of Epochs: %d \nTraining Accuracy : %f, Test Accuracy : %f" % (combination, learning_rate, batches, epochs, train_acc, test_acc))
+    return(final_combination_data)
+
+def check_param_is_numeric(param, value):
+    try:
+        value = float(value)
+    except:
+        print("{} must be numeric".format(param))
+        quit(1)
+    return value
+
 def cone(combination, _learning_rate, _epochs, _batches, seed):
+    numpy.random.seed(int(_seed))
     train_images, test_images, train_labels, test_labels = GetData()
 
     model = keras.Sequential()
@@ -71,13 +87,17 @@ def cone(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
+    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
+    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
+
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 
 
 def ctwo(combination, _learning_rate, _epochs, _batches, seed):
-    train_images, test_images, train_labels, test_labels = GetData()
+    numpy.random.seed(int(_seed))
 
+    train_images, test_images, train_labels, test_labels = GetData()
     model = keras.Sequential()
     #The feature detection layers.
     model.add(Conv2D(16, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
@@ -103,10 +123,14 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
+    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
+    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
+
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 # No convolutional layers
 def cthree(combination, _learning_rate, _epochs, _batches, seed):
+    numpy.random.seed(int(_seed))
     train_images, test_images, train_labels, test_labels = GetData()
 
     model = keras.Sequential()
@@ -129,27 +153,28 @@ def cthree(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
+    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
+    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
+
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 def cfour(combination, _learning_rate, _epochs, _batches, seed):
     train_images, test_images, train_labels, test_labels = GetData()
-
     model = keras.Sequential()
-    #The feature detection layers.
-    # input structure (28,28,1)
+    # The feature detection layers.
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
-    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))
+    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))   
     # not 100% sure about this but according to docs minimises chance of overfitting 
     model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.5))
     model.add(Dense(10, activation="softmax", name="output-layer"))
 
-    # model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
     model_optimizer = Adadelta(lr = _learning_rate)
-    model.compile(optimizer=model_optimizer, loss =categorical_crossentropy, metrics=['accuracy'])
+    model.compile(optimizer=model_optimizer, loss =sparse_categorical_crossentropy, metrics=['accuracy'])
 
     boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
@@ -158,8 +183,13 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
 
     test_loss, test_acc = model.evaluate(test_images, test_labels)
+    train_loss, train_acc = model.evaluate(train_images, train_labels)
     print('Test accuracy:', test_acc)
 
+    # Print results for Dataset table comparison
+    print(GetReportOutput(combination, _learning_rate, _batches, _epochs, train_acc, test_acc), 
+    file=open('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}-results.txt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)), 'w'))
+    
     model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
 
 
@@ -176,15 +206,6 @@ def main(combination, learning_rate, epochs, batches, seed):
         cthree(combination, learning_rate, epochs, batches, seed)
     if int(combination)==4:
         cfour(combination, learning_rate, epochs, batches, seed)
-
-def check_param_is_numeric(param, value):
-
-    try:
-        value = float(value)
-    except:
-        print("{} must be numeric".format(param))
-        quit(1)
-    return value
 
 
 if __name__ == "__main__":
