@@ -99,7 +99,6 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
 
     train_images, test_images, train_labels, test_labels = GetData()
     model = keras.Sequential()
-    #The feature detection layers.
     model.add(Conv2D(16, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
 
     model.add(Flatten(input_shape=(28,28,1)))
@@ -163,10 +162,8 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     model = keras.Sequential()
     # The feature detection layers.
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28,28,1)))
-    # model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))
     model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))   
-    # not 100% sure about this but according to docs minimises chance of overfitting 
     model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
