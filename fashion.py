@@ -52,7 +52,6 @@ def check_param_is_numeric(param, value):
     return value
 
 def cone(combination, _learning_rate, _epochs, _batches, seed):
-    numpy.random.seed(int(_seed))
     train_images, test_images, train_labels, test_labels = GetData()
 
     model = keras.Sequential()
@@ -88,7 +87,6 @@ def cone(combination, _learning_rate, _epochs, _batches, seed):
 
 
 def ctwo(combination, _learning_rate, _epochs, _batches, seed):
-    numpy.random.seed(int(_seed))
 
     train_images, test_images, train_labels, test_labels = GetData()
     model = keras.Sequential()
@@ -119,7 +117,6 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
 
 # No convolutional layers
 def cthree(combination, _learning_rate, _epochs, _batches, seed):
-    numpy.random.seed(int(_seed))
     train_images, test_images, train_labels, test_labels = GetData()
 
     model = keras.Sequential()
@@ -175,6 +172,8 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
 
 def main(combination, learning_rate, epochs, batches, seed):
     # Set Seed
+    
+    numpy.random.seed(int(seed))
     tf.random.set_random_seed(seed)
 
     print("Seed: {}".format(seed))
