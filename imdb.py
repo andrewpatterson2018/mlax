@@ -36,7 +36,6 @@ def check_param_is_numeric(param, value):
 def cone(combination, _learning_rate, _epochs, _batches, _seed):
     trainX, testX, trainY, testY = GetData()
     
-    numpy.random.seed(int(_seed))
     max_review_length = 500
     top_words = 5000
     embedding_vecor_length = 128
@@ -79,7 +78,6 @@ def cone(combination, _learning_rate, _epochs, _batches, _seed):
 
 def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
     trainX, testX, trainY, testY = GetData()
-    numpy.random.seed(int(_seed))
     max_review_length = 500
     top_words = 5000
     trainX = sequence.pad_sequences(trainX, maxlen=max_review_length)
@@ -110,7 +108,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
    
 def cthree(combination, _learning_rate, _epochs, _batches, _seed):
     trainX, testX, trainY, testY = GetData()
-    numpy.random.seed(int(_seed))
+    
     max_review_length = 500
     top_words = 5000
     embedding_vecor_length = 64
@@ -144,6 +142,7 @@ def cthree(combination, _learning_rate, _epochs, _batches, _seed):
 
 def main(combination, learning_rate, epochs, batches, seed):
     # Set Seed
+    numpy.random.seed(int(_seed))
     tf.random.set_random_seed(seed)
 
     print("Seed: {}".format(seed))
