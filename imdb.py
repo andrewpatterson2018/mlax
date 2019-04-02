@@ -142,7 +142,7 @@ def cthree(combination, _learning_rate, _epochs, _batches, _seed):
 
 def main(combination, learning_rate, epochs, batches, seed):
     # Set Seed
-    numpy.random.seed(int(_seed))
+    numpy.random.seed(int(seed))
     tf.random.set_random_seed(seed)
 
     print("Seed: {}".format(seed))
