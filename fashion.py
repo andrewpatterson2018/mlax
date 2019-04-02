@@ -148,7 +148,7 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     model.add(Dense(10, activation="softmax", name="output-layer"))
 
     # model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
-    model_optimizer = Adadelta()
+    model_optimizer = Adadelta(lr = _learning_rate)
     model.compile(optimizer=model_optimizer, loss =categorical_crossentropy, metrics=['accuracy'])
 
     boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
