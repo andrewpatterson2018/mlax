@@ -72,7 +72,7 @@ def cone(combination, _learning_rate, _epochs, _batches, seed):
    
     model.summary()
 
-    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
+    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed))
 
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
     
@@ -82,7 +82,7 @@ def cone(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
-    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
+    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed)))
 
 
 
@@ -103,7 +103,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
    
     model.summary()
 
-    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
+    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed))
 
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
     
@@ -113,7 +113,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
-    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
+    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed)))
 
 # No convolutional layers
 def cthree(combination, _learning_rate, _epochs, _batches, seed):
@@ -130,7 +130,7 @@ def cthree(combination, _learning_rate, _epochs, _batches, seed):
 
     model.summary()
 
-    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
+    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed))
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
     
     model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
@@ -139,7 +139,7 @@ def cthree(combination, _learning_rate, _epochs, _batches, seed):
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('Test accuracy:', test_acc)
 
-    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
+    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed)))
 
 def cfour(combination, _learning_rate, _epochs, _batches, seed):
     train_images, test_images, train_labels, test_labels = GetData()
@@ -157,7 +157,7 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     model_optimizer = Adadelta(lr = _learning_rate)
     model.compile(optimizer=model_optimizer, loss =sparse_categorical_crossentropy, metrics=['accuracy'])
 
-    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed))
+    boardString = 'logs/fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed))
     tensorboard = TensorBoard(log_dir=boardString, histogram_freq=2, write_grads=True)
     model.summary()
 
@@ -167,7 +167,7 @@ def cfour(combination, _learning_rate, _epochs, _batches, seed):
     train_loss, train_acc = model.evaluate(train_images, train_labels)
     print('Test accuracy:', test_acc)
 
-    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(epochs), int(batches), int(seed)))
+    model.save('fashion-{:d}-{:.3f}-{:d}-{:d}-{:d}.cpkt'.format(int(combination), _learning_rate, int(_epochs), int(_batches), int(seed)))
 
 
 def main(combination, learning_rate, epochs, batches, seed):
