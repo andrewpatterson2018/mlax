@@ -1,3 +1,8 @@
+from numpy.random import seed
+seed(12345)
+from tensorflow import set_random_seed
+set_random_seed(12345)
+
 import argparse
 import time
 import keras

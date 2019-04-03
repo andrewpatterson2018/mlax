@@ -20,7 +20,7 @@ class Logger(object):
 if __name__ == "__main__":
     sys.stdout = Logger()
     # FASHION MNIST RUNS
-    fashion.main(4,0.05,15,128,12345)
+    fashion.main(1, 1,13,64,12345)
     fashion.main(4,0.01,15,256,12345)
     fashion.main(4,0.1,15,512,12345)
     fashion.main(2,0.05,15,128,12345)
@@ -28,9 +28,9 @@ if __name__ == "__main__":
     fashion.main(2,0.1,15,512,12345)
 
     # IMDB RUNS
-imdb.main(2, 0.3, 3, 256, 12345)
-imdb.main(2, 0.05, 5, 512, 12345)
-imdb.main(2, 0.1, 3, 64, 12345)
-imdb.main(1, 0.3, 3, 256, 12345)
-imdb.main(1, 0.05, 5, 512, 12345)
-imdb.main(1, 0.1, 3, 64, 12345)
+    imdb.main(2, 0.3, 3, 256, 12345)
+    imdb.main(2, 0.05, 5, 512, 12345)
+    imdb.main(2, 0.1, 3, 64, 12345)
+    imdb.main(1, 0.3, 3, 256, 12345)
+    imdb.main(1, 0.05, 5, 512, 12345)
+    imdb.main(1, 0.1, 3, 64, 12345)
