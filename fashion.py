@@ -8,10 +8,10 @@ import time
 import keras
 import tensorflow as tf
 from time import time
-from keras.losses import categorical_crossentropy, sparse_categorical_crossentropy
+from keras.losses import categorical_crossentropy
 from keras.callbacks import TensorBoard
-from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Dropout
-from keras.optimizers import SGD, Adam, Adadelta
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
+from keras.optimizers import SGD, Adadelta
 from keras.utils import to_categorical
 import keras.backend as K
 import numpy
