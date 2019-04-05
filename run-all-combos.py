@@ -20,17 +20,23 @@ class Logger(object):
 if __name__ == "__main__":
     sys.stdout = Logger()
     # FASHION MNIST RUNS
-    fashion.main(4,0.05,15,128,12345)
-    fashion.main(4,0.01,15,256,12345)
-    fashion.main(4,0.1,15,512,12345)
+    # this combo gets 93% test accuracy after 13epochs
+    fashion.main(1,1,13,64,12345)
+    # how much did batch size affect performance of the network
+    fashion.main(1,1,13,256,12345)
+    # smaller learning rate
+    fashion.main(1,0.5,13,64,12345)
+    # smaller learning rate + bigger batch size
+    fashion.main(1,0.5,13,256,12345)
+    
     fashion.main(2,0.05,15,128,12345)
     fashion.main(2,0.01,15,256,12345)
     fashion.main(2,0.1,15,512,12345)
 
     # IMDB RUNS
-    imdb.main(3, 0.001, 15, 64, 12345)
-    imdb.main(3, 0.1, 15, 128, 12345)
-    imdb.main(3, 0.2, 15, 256, 12345)
-    imdb.main(2, 0.001, 15, 64, 12345)
-    imdb.main(2, 0.1, 15, 128, 12345)
-    imdb.main(2, 0.2, 15, 256, 12345)
+    imdb.main(2, 0.3, 3, 256, 12345)
+    imdb.main(2, 0.05, 5, 512, 12345)
+    imdb.main(2, 0.1, 3, 64, 12345)
+    imdb.main(1, 0.3, 3, 256, 12345)
+    imdb.main(1, 0.05, 5, 512, 12345)
+    imdb.main(1, 0.1, 3, 64, 12345)
