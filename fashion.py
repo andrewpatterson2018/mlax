@@ -35,8 +35,41 @@ def GetData():
     test_labels = to_categorical(test_labels)
 
     return train_images, test_images, train_labels, test_labels
-
 def cone(combination, _learning_rate, _epochs, _batches, seed):
+    train_images, test_images, train_labels, test_labels = GetData()
+    model = keras.Sequential()
+
+    # The feature detection layers.
+    model.add(Conv2D(32, kernel_size=(3, 1), activation='elu', input_shape=(28,28,1)))
+    model.add(Conv2D(32, kernel_size=(1, 3), activation='elu'))
+    model.add(Dropout(0.25))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same')) 
+    model.add(Conv2D(32, kernel_size=(3, 1), activation='elu'))
+    model.add(Conv2D(32, kernel_size=(1, 3), activation='elu'))
+    model.add(Dropout(0.25))
+    model.add(MaxPooling2D(pool_size=(2, 2), padding='same')) 
+
+    model.add(Flatten())
+    model.add(Dense(256, activation='elu'))
+    model.add(Dropout(0.25))
+    model.add(Dense(256, activation='elu'))
+    model.add(Dropout(0.25))
+    model.add(Dense(10, activation="softmax", name="output-layer"))
+
+    model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
+    model.compile(optimizer=model_optimizer, loss =categorical_crossentropy, metrics=['accuracy'])
+
+    tensorboard = buildTensorBoard(combination, _learning_rate, epochs, batches, seed)
+    
+    model.summary()
+
+    model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
+
+    evaluate(model, train_images, train_labels, test_images, test_labels)
+
+    model.save('fashion-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed))
+
+def csix(combination, _learning_rate, _epochs, _batches, seed):
     train_images, test_images, train_labels, test_labels = GetData()
 
     model = keras.Sequential()
@@ -184,39 +217,6 @@ def cfive(combination, _learning_rate, _epochs, _batches, seed):
 
     model.save('fashion-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed))
 
-def csix(combination, _learning_rate, _epochs, _batches, seed):
-    train_images, test_images, train_labels, test_labels = GetData()
-    model = keras.Sequential()
-
-    # The feature detection layers.
-    model.add(Conv2D(32, kernel_size=(3, 1), activation='elu', input_shape=(28,28,1)))
-    model.add(Conv2D(32, kernel_size=(1, 3), activation='elu'))
-    model.add(Dropout(0.25))
-    model.add(MaxPooling2D(pool_size=(2, 2), padding='same')) 
-    model.add(Conv2D(32, kernel_size=(3, 1), activation='elu'))
-    model.add(Conv2D(32, kernel_size=(1, 3), activation='elu'))
-    model.add(Dropout(0.25))
-    model.add(MaxPooling2D(pool_size=(2, 2), padding='same')) 
-
-    model.add(Flatten())
-    model.add(Dense(256, activation='elu'))
-    model.add(Dropout(0.25))
-    model.add(Dense(256, activation='elu'))
-    model.add(Dropout(0.25))
-    model.add(Dense(10, activation="softmax", name="output-layer"))
-
-    model_optimizer = SGD(lr=_learning_rate, momentum=0.9, nesterov=True)
-    model.compile(optimizer=model_optimizer, loss =categorical_crossentropy, metrics=['accuracy'])
-
-    tensorboard = buildTensorBoard(combination, _learning_rate, epochs, batches, seed)
-    
-    model.summary()
-
-    model.fit(train_images, train_labels, validation_data=(test_images, test_labels), epochs=int(_epochs), batch_size=int(_batches), callbacks=[tensorboard] )
-
-    evaluate(model, train_images, train_labels, test_images, test_labels)
-
-    model.save('fashion-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed))
 
 def buildTensorBoard(combination, _learning_rate, epochs, batches, seed):
     boardString = 'logs/fashion-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed)
