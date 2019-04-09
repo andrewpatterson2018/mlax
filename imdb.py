@@ -36,7 +36,7 @@ def cone(combination, _learning_rate, _epochs, _batches, _seed):
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    tensorboard = buildTensorBoard(combination, _learning_rate, epochs, batches, seed)
+    tensorboard = buildTensorBoard(combination, _learning_rate, _epochs, _batches, _seed)
     
     model.summary()
     
@@ -45,7 +45,7 @@ def cone(combination, _learning_rate, _epochs, _batches, _seed):
     # Final evaluation of the model
     evaluate(model, trainX, trainY, testX, testY)
 
-    model.save('imdb-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed))
+    model.save('imdb-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, _epochs, _batches, _seed))
 
    
 def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
@@ -65,7 +65,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     
-    tensorboard = buildTensorBoard(combination, _learning_rate, epochs, batches, seed)
+    tensorboard = buildTensorBoard(combination, _learning_rate, _epochs, _batches, _seed)
     
     model.summary()
     
@@ -74,7 +74,7 @@ def ctwo(combination, _learning_rate, _epochs, _batches, _seed):
     # Final evaluation of the model
     evaluate(model, trainX, trainY, testX, testY)
 
-    model.save('imdb-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, epochs, batches, seed))
+    model.save('imdb-{0}-{1}-{2}-{3}-{4}.cpkt'.format(combination, _learning_rate, _epochs, _batches, _seed))
 
 
 

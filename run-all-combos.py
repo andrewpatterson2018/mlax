@@ -41,13 +41,18 @@ if __name__ == "__main__":
     # imdb.main(1, 0.05, 5, 512, 12345)
     # imdb.main(1, 0.1, 3, 64, 12345)
 
+    print("Combination 1, LR=0.3, Epochs=3, BatchSize=256, seed=12345")
     imdb.main(1, 0.3, 3, 256, 12345)
-    imdb.main(1, 0.05, 5, 512, 12345)
-    imdb.main(1, 0.1, 3, 64, 12345)
-
+    print("Combination 1, LR=0.2, Epochs=5, Batchsize=512, seed=12345")
+    imdb.main(1, 0.2, 5, 512, 12345)
+    print("Combination 1, LR=0.2, Epochs=3, BatchSize=64, seed=12345")
+    imdb.main(1, 0.2, 3, 64, 12345)
+    print("Combination 2, LR=0.3, Epochs=3, BatchSize=256, seed=12345")
     imdb.main(2, 0.3, 3, 256, 12345)
-    imdb.main(2, 0.05, 5, 512, 12345)
-    imdb.main(2, 0.1, 3, 64, 12345)
+    print("Combination 2, LR=0.2, Epochs=5, Batchsize=512, seed=12345")
+    imdb.main(2, 0.2, 5, 512, 12345)
+    print("Combination 2, LR=0.2, Epochs=3, BatchSize=64, seed=12345")
+    imdb.main(2, 0.2, 3, 64, 12345)
 
 
 
