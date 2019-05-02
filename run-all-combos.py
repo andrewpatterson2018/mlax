@@ -8,13 +8,13 @@ class Logger(object):
 
     def write(self, message):
         self.terminal.write(message)
-        self.log.write(message)  
+        self.log.write(message)
 
     def flush(self):
-        #this flush method is needed for python 3 compatibility.
-        #this handles the flush command by doing nothing.
-        #you might want to specify some extra behavior here.
-        pass    
+        # this flush method is needed for python 3 compatibility.
+        # this handles the flush command by doing nothing.
+        # you might want to specify some extra behavior here.
+        pass
 
 
 if __name__ == "__main__":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # fashion.main(1,0.5,13,64,12345)
     # # smaller learning rate + bigger batch size
     # fashion.main(1,0.5,13,256,12345)
-    
+
     # fashion.main(2,0.05,15,128,12345)
     # fashion.main(2,0.01,15,256,12345)
     # fashion.main(2,0.1,15,512,12345)
@@ -53,6 +53,3 @@ if __name__ == "__main__":
     imdb.main(2, 0.2, 5, 512, 12345)
     print("Combination 2, LR=0.2, Epochs=3, BatchSize=64, seed=12345")
     imdb.main(2, 0.2, 3, 64, 12345)
-
-
-
